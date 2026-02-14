@@ -55,6 +55,8 @@ const EditProgramPage = () => {
   })
   const [accessStatus, setAccessStatus] = useState<'checking' | 'allowed' | 'denied'>('checking')
   useEffect(() => {
+    let redirectTimeout: ReturnType<typeof setTimeout> | null = null
+
     if (sessionStatus === 'loading' || queryLoading) {
       return
     }
@@ -83,7 +85,11 @@ const EditProgramPage = () => {
         variant: 'solid',
         timeout: 4000,
       })
-      setTimeout(() => router.replace('/my/mentorship/programs'), 1500)
+      redirectTimeout = setTimeout(() => router.replace('/my/mentorship/programs'), 1500)
+    }
+
+    return () => {
+      if (redirectTimeout) clearTimeout(redirectTimeout)
     }
   }, [sessionStatus, session, data, queryLoading, router])
   useEffect(() => {

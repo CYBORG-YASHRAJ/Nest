@@ -39,6 +39,8 @@ const EditModulePage = () => {
   })
 
   useEffect(() => {
+    let redirectTimeout: ReturnType<typeof setTimeout> | null = null
+
     if (sessionStatus === 'loading' || queryLoading) {
       return
     }
@@ -69,7 +71,11 @@ const EditModulePage = () => {
         variant: 'solid',
         timeout: 4000,
       })
-      setTimeout(() => router.replace(`/my/mentorship/programs/${programKey}`), 1500)
+      redirectTimeout = setTimeout(() => router.replace(`/my/mentorship/programs/${programKey}`), 1500)
+    }
+
+    return () => {
+      if (redirectTimeout) clearTimeout(redirectTimeout)
     }
   }, [sessionStatus, sessionData, queryLoading, data, programKey, queryError, router])
 

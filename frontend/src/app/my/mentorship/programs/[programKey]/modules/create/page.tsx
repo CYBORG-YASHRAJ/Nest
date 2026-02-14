@@ -63,6 +63,8 @@ const CreateModulePage = () => {
   const [accessStatus, setAccessStatus] = useState<'checking' | 'allowed' | 'denied'>('checking')
 
   useEffect(() => {
+    let redirectTimeout: ReturnType<typeof setTimeout> | null = null
+
     if (sessionStatus === 'loading' || queryLoading) {
       return
     }
@@ -88,7 +90,11 @@ const CreateModulePage = () => {
         variant: 'solid',
         timeout: 4000,
       })
-      setTimeout(() => router.replace('/my/mentorship'), 1500)
+      redirectTimeout = setTimeout(() => router.replace('/my/mentorship'), 1500)
+    }
+
+    return () => {
+      if (redirectTimeout) clearTimeout(redirectTimeout)
     }
   }, [sessionStatus, sessionData, queryLoading, programData, programKey, queryError, router])
 
